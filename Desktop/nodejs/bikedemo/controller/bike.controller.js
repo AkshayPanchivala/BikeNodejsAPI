@@ -13,12 +13,34 @@ const createbike=async(req,res,next)=>{
         
         const typeExists = await BikeType.findOne({  Biketype: req.body.bikeType });
         
+        const { name, bikeType,price} = req.body;
+
+  let missingValues = [];
+
+  if (!name) missingValues.push("Name ");
+  if (!bikeType) missingValues.push("bikeType");
+  if (!price) missingValues.push("price");
+ 
+
+  if (missingValues.length > 0) {
+    return next(
+      new AppError(
+        `required missing values : ${missingValues} is neccessary to be filled`,
+        400
+      )
+    );
+  }
         if (!typeExists) {
           return next(new AppError("This product type does not exists", 400));
         } else {
             BikeTypeID = typeExists._id;
         }
      console.log(BikeTypeID);
+     const existingbike=await Bike.findOne({name:name});
+     console.log(existingbike);
+     if(existingbike){
+        return next(new AppError('Already bike is exist',400));
+     }
         const bike=await Bike.create({name:req.body.name, price:req.body.price, BikeTypeID: BikeTypeID});
 
         res.status(201).json({
@@ -26,7 +48,7 @@ const createbike=async(req,res,next)=>{
             data:bike
         })
     }catch(err){
-        next(new AppError('something went wrong in create bike in bike controller',404));
+        next(new AppError(err,500));
     }
    
 };
@@ -38,12 +60,18 @@ const createbike=async(req,res,next)=>{
 const gateallbike=async(req,res,next)=>{
     try{
         const bike=await Bike.find();
+        if(bike.length==0){
+            return res.status(200).json({
+                status:'success',
+                message:'No data found'
+            })
+        }
         res.status(200).json({
             status:'success',
             data:bike
         })
     }catch(err){
-        next(new AppError('something went wrong in gate all bike in bike controller',404));
+        next(new AppError(err,404));
     }
    
 }
@@ -54,6 +82,9 @@ const gateallbike=async(req,res,next)=>{
 
 const deletebike=async(req,res,next)=>{
     try{
+        if(!req.params.id){
+            return next(new AppError("Id is not exist", 400));
+        }
         const bike=await Bike.findByIdAndRemove(req.params.id);
         if(!bike){
             next(new AppError('Bike is not a found',404));
@@ -63,7 +94,7 @@ const deletebike=async(req,res,next)=>{
             data:null
         })
     }catch(err){
-        next(new AppError('something went wrong in delete bike in bike controller',404));
+        next(new AppError(err,404));
     }
    
 }
@@ -73,7 +104,11 @@ const deletebike=async(req,res,next)=>{
 //updatebike
 
 const updatebike=async(req,res,next)=>{
+    
     try{
+        if(!req.params.id){
+            return next(new AppError("Id is not exist", 400));
+        }
         const bike=await Bike.findByIdAndUpdate(req.params.id,req.body,{
             new:true,
             runValidators:true
@@ -86,7 +121,7 @@ const updatebike=async(req,res,next)=>{
             data:bike
         })
     }catch(err){
-        next(new AppError('something went wrong in update bike in bike controller',404));
+        next(new AppError('Bike is not a found',404));
     }
    
 }
@@ -108,9 +143,7 @@ const getbikebytype=async (req,res,next)=>{
         const bike=await Bike.find({BikeTypeID: biketypeid});
         
         if(bike.length==0){
-            
-        
-        next(new AppError('bike not available by this type',404))
+        next(new AppError('bike not available by this type',400))
         }else{
             
             res.status(200).json({
@@ -121,7 +154,7 @@ const getbikebytype=async (req,res,next)=>{
         }
         
     }catch(err){
-        next(new AppError('something went wrong in get bike by type in bike controller',404));
+        next(new AppError('bike not available by this type',404));
     }
 }
 
@@ -131,6 +164,7 @@ const getbikebytype=async (req,res,next)=>{
 const recentbike=async(req,res,next)=>{
     try{
     const bike=await Bike.findOne().sort({createdAt:-1});
+    
     if(!bike){
         next(new AppError('Bike is not a found',404));
     }
@@ -139,7 +173,7 @@ const recentbike=async(req,res,next)=>{
         data:bike
     });
 }catch(err){
-    next(new AppError('something went wrong in recent bike in bike controller',404));
+    next(new AppError('Bike is not a found',404));
 }
 }
 

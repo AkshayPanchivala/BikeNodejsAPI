@@ -8,5 +8,5 @@ const biketypeschema=mongoose.Schema({
     }
 })
 
-const biketypes=mongoose.model('Type',biketypeschema);
+const biketypes=mongoose.model('Types',biketypeschema);
 module.exports=biketypes;

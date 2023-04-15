@@ -5,6 +5,7 @@ const bikeschema=mongoose.Schema({
         type:String,
         unique:true,
         required:[true,'please provide name'],
+        trim:[true,'Please Provide a name without a space'],
 
     },
     BikeTypeID: {

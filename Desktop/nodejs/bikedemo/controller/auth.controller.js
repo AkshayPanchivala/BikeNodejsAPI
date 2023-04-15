@@ -16,13 +16,13 @@ try{
     const decoded=jwt.verify(token,process.env.jwt_secretkey);
     const freshuser=await User.findById(decoded._id);
     if(!freshuser){
-        next(new AppError('you are not log in',404)) 
+        next(new AppError('you are not log in',403)) 
     }
     
-    
+    req.user=freshuser;
     next();
 }catch(err){
-   next(new AppError('you are not log in',404)) 
+   next(new AppError('you are not log in',403)) 
 }
 }
 module.exports={protect};
