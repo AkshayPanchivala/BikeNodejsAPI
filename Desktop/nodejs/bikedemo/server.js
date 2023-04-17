@@ -8,7 +8,6 @@ const cors=require('cors');
 const dbconnect=require('./connection/dbconnect');
 const globalErrorHandler=require('./arrorhandler/globalerrorhandler');
 const AppError=require('./arrorhandler/Apperror');
-const { checkout } = require('./router/biketypes.router');
 
 const app=express();
 
@@ -20,6 +19,7 @@ app.use(hpp());
 app.use(cors())
 
 app.use('/user',require('./router/user.router'));
+
 app.use('/user/biketype',require('./router/biketypes.router'));
 
 app.use('/user/bike',require('./router/bike.router'));
@@ -30,7 +30,8 @@ app.all('*',(req,res,next)=>{
     next(new AppError(`can't find this page`,404));
     
     });
-    app.use(globalErrorHandler);
+    
+app.use(globalErrorHandler);
 
 dbconnect();
 
@@ -42,7 +43,7 @@ app.listen(PORT,()=>{
 
 // Need to create Project for registering new bikes.where user should be able to register and logic and create bike types.and can create new bikes and with selected bike types
 // and user can like and dislike bikes.can get bikes of the most liked bikes.and recently registered bikes and user can comment on bikes.
-// dekh aatlu pati gayu
+
 // APIS- register user
 //       login user
 //       create bike types
@@ -53,8 +54,5 @@ app.listen(PORT,()=>{
 //       get all bikes
 //       get bikes by bike types
 //       get most recent regestered bikes 
-
-
-
 //       get most liked bikes
 //       comment on bike

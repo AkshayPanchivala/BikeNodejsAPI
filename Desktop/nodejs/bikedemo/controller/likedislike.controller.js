@@ -1,24 +1,27 @@
+const asyncHandler = require("express-async-handler");
 const AppError=require('./../arrorhandler/Apperror')
 const Like=require('./../module/like.model')
 const DisLike=require('./../module/dislike.model');
 const Bike=require('./../module/bike.model');
+const Comments = require("../module/comment.model");
 
 
 
+///////////////////////////////////////////
+/////create like
 
-const like=async(req,res,next)=>{
-    try{
+const like=asyncHandler(async(req,res,next)=>{
+    
         const id=req.params.id;
+
+        
         const bike=await Bike.findById(id);
         
         if(!bike){
             return next(new AppError("Bike is not found",404));
         }
     
-       await DisLike.findOneAndDelete({
-        user_id: req.user.id,
-        Bike_id: id,
-       })
+       
      
        const existinglike=await Like.findOne({
         user_id: req.user.id,
@@ -27,6 +30,10 @@ const like=async(req,res,next)=>{
        if(existinglike){
         return next(new AppError("you are already like this product",400));
        }
+       await DisLike.findOneAndDelete({
+        user_id: req.user.id,
+        Bike_id: id,
+       })
        const like=await Like.create({
         user_id: req.user.id,
         Bike_id:id,
@@ -35,13 +42,15 @@ const like=async(req,res,next)=>{
         status:'success',
         msg:"successfully liked this bike"
        })
-    }catch(err){
-        return next(new AppError("some thing went wrong in like controller",404));
-    }
+   
 
-};
-const dislike=async(req,res,next)=>{
-    try{
+});
+
+
+//////////////////////////////////////////////////////
+////create dislike
+const dislike=asyncHandler(async(req,res,next)=>{
+   
         const id=req.params.id;
         const bike=await Bike.findById(id);
 
@@ -49,11 +58,7 @@ const dislike=async(req,res,next)=>{
             return next(new AppError("Bike is not found",404));
         }
 
-       await Like.findOneAndDelete({
        
-        user_id: req.user.id,
-        Bike_id: id,
-       })
 
        const existingdislike=await DisLike.findOne({
         user_id: req.user.id,
@@ -62,22 +67,27 @@ const dislike=async(req,res,next)=>{
        if(existingdislike){
         return next(new AppError("you Have already dislike this product",400));
        }
+       await Like.findOneAndDelete({
+       
+        user_id: req.user.id,
+        Bike_id: id,
+       })
        const dislike=await DisLike.create({
         user_id: req.user.id,
         Bike_id: id,
        })
+       
        res.status(400).json({
         status:'success',
         msg:"successfully disliked this bike"
        })
-    }catch(err){
-        return next(new AppError("some thing went wrong in dislike controller",404));
-    }
-};
+    
+});
 
 
-
-const MostLikedProduct=async(req,res,next)=>{
+//////////////////////////////////////////////////
+///get most liked product
+const MostLiked=asyncHandler(async(req,res,next)=>{
     
     const likedbike = await Like.aggregate([
       {
@@ -94,21 +104,32 @@ const MostLikedProduct=async(req,res,next)=>{
       },
       
     ]).exec();
-    console.log(likedbike);
+   
+   if(likedbike.length==0){
+    return next(new AppError("Not found any like on bike",404));
+   }
+   
   const bike=likedbike[0]
+  
   const mostlikedbike=await Bike.findById(bike._id);
- 
-    // console.log(mostlikedbike);
+  const comment=await Comments.find({Bike_id:bike._id});
+   
+   let commentarray=[];
+   for(let i=0;i<comment.length;i++){
+    commentarray.push(comment[i].comment);
+   }
     if (mostlikedbike) {
-      res.json({
-        output: mostlikedbike,
+      res.json({     
+        mostlikedbike: mostlikedbike,
+        count:likedbike[0].count,
+        comment:commentarray
       });
     } else {
-      return next(new AppError("Something went wrong", 500));
+      return next(new AppError("Bike is not found", 404));
     }
-  };
+  });
 
 
 
 
-module.exports={like,dislike,MostLikedProduct}
+module.exports={like,dislike,MostLiked}

@@ -10,9 +10,10 @@ const bikeschema=mongoose.Schema({
     },
     BikeTypeID: {
         type: mongoose.Schema.ObjectId,
-        ref: "Type",
+        ref: "Types",
         required:true
       },
+      
       createdAt:{
         type:Date,
       },
@@ -21,9 +22,28 @@ const bikeschema=mongoose.Schema({
         required:[true,'please provide price'],
     }
 })
+
+
+///// set a date before save and create
 bikeschema.pre('save',async function(next){
     this.createdAt=Date.now();
     next();
 })
+
+
+/*when run any type of find query then this function run
+ and populate the biketypeid*/
+
+
+bikeschema.pre(/^find/,function(next){
+    this.populate({
+        path:'BikeTypeID',
+        select:'Biketype'
+
+    });
+    next();
+})
+
+
 const bike=mongoose.model('Bikes',bikeschema);
 module.exports=bike;

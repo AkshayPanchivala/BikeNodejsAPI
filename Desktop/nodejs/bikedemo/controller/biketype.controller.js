@@ -1,6 +1,8 @@
+const asyncHandler = require("express-async-handler");
+
 const AppError = require('../arrorhandler/Apperror');
 const BikeType=require('./../module/biketype.model');
-const asyncHandler = require("express-async-handler");
+
 
 
 //////////////////
@@ -9,12 +11,12 @@ const createbiketype=asyncHandler(async(req,res,next)=>{
     
         
         if(!req.body.Biketype || typeof(req.body.Biketype)!='string'){
-            return next(new AppError('bike type is not defined',400));
+            return next(new AppError('bike type is not found',404));
         }
         
         const existbiketype=await BikeType.find({Biketype:req.body.Biketype});
         if(existbiketype.length>0){
-            return next(new AppError('Already bike type is exist',400));
+            return next(new AppError('Already bike type is exist',403));
         }
         const biketype=await BikeType.create({Biketype:req.body.Biketype});
         
@@ -35,7 +37,7 @@ const getallbiketype=asyncHandler(async(req,res,next)=>{
     
         const alltype=await BikeType.find();
         
-        console.log(alltype.length);
+        
         if(alltype.length==0){
             return res.status(200).json({
                 status:'success',

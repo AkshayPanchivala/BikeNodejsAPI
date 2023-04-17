@@ -18,6 +18,7 @@ const userschema=mongoose.Schema({
         type:String,
         required:[true,'please provide password'],
         trim:[true,'Please Provide a password without a space'],
+        validate:[validator.isStrongPassword,'Please provide strong password']
     },
     confirmpassword:{
         type:String,
@@ -31,6 +32,7 @@ const userschema=mongoose.Schema({
 
 });
 
+////email validation
 userschema.pre('save',async function(next){
     
     var emailRegex = /^[-!#$%&'*+\/0-9=?A-Z^_a-z{|}~](\.?[-!#$%&'*+\/0-9=?A-Z^_a-z`{|}~])*@[a-zA-Z0-9](-*\.?[a-zA-Z0-9])*\.[a-zA-Z](-?[a-zA-Z0-9])+$/;
@@ -43,6 +45,16 @@ userschema.pre('save',async function(next){
     }
   
 })
+//password validation
+userschema.pre('save',async function(next){
+  
+    if(this.password.includes(' ')||(this.password.length<8)){
+        
+        return next(new AppError('password has not valid',400));
+    }
+    next();
+})
+/// password hashing and confirmpassword undefined
 userschema.pre('save',async function(next){
     
     const hashedpassword= await bcrypt.hash(this.password,10);
@@ -50,6 +62,9 @@ userschema.pre('save',async function(next){
     this.confirmpassword=undefined;
     next();
 })
+
+
+
 
 const User=mongoose.model('Users',userschema);
 module.exports=User;

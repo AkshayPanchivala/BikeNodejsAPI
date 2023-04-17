@@ -1,11 +1,10 @@
 const bcrypt=require('bcrypt');
 const jwt=require('jsonwebtoken');
-
-
+const asyncHandler = require("express-async-handler");
 
 const User=require('./../module/user.model');
 const AppError=require('./../arrorhandler/Apperror')
-const asyncHandler = require("express-async-handler");
+
 
 
 ////////////////////////////////////////////////////////////
@@ -32,15 +31,15 @@ const register=asyncHandler(async(req,res,next)=>{
         }
        
         if(password!==confirmpassword){
-            return next(new AppError('Password and confirmpassword are not matching',404));
+            return next(new AppError('Password and confirmpassword are not matching',403));
         }
 
         if(typeof(password)!='string'||typeof(confirmpassword)!='string'){
-            return next(new AppError('confirm password or password is incorrect',404));
+            return next(new AppError('confirm password or password is incorrect',403));
         }
         const existuser=await User.find({email:email});
         if(existuser.length>0){
-            return next(new AppError('Already user is exist',400));
+            return next(new AppError('Already user is exist',409));
         }
         const user=await User.create(req.body);
 
@@ -71,7 +70,7 @@ const login=asyncHandler(async(req,res,next)=>{
           
         }else{
             if(typeof(password)!='string'){
-                return next(new AppError('username or password is incorrect',404));
+                return next(new AppError('username or password is incorrect',403));
             }
             const passwordexist=await bcrypt.compare(password,user.password);
            
@@ -87,7 +86,7 @@ const login=asyncHandler(async(req,res,next)=>{
                 token:token
             })
             }else{
-                return next(new AppError('username or password is incorrect',404));
+                return next(new AppError('username or password is incorrect',403));
             }
         }
         

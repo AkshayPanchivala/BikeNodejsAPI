@@ -1,6 +1,5 @@
 const jwt=require('jsonwebtoken');
 
-
 const User=require('./../module/user.model');
 const AppError = require("../arrorhandler/Apperror");
 
@@ -14,15 +13,16 @@ try{
     }
    
     const decoded=jwt.verify(token,process.env.jwt_secretkey);
+    
     const freshuser=await User.findById(decoded._id);
     if(!freshuser){
-        next(new AppError('you are not log in',403)) 
+        next(new AppError('you are not log in',401)) 
     }
     
     req.user=freshuser;
     next();
 }catch(err){
-   next(new AppError('you are not log in',403)) 
+   next(new AppError('you are not log in',401)) 
 }
 }
 module.exports={protect};

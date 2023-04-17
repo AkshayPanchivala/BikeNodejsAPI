@@ -6,6 +6,7 @@ const biketypeschema=mongoose.Schema({
         unique:true,
         required:[true,'please provide Biketype'],
     }
+  
 })
 
 const biketypes=mongoose.model('Types',biketypeschema);

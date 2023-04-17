@@ -16,6 +16,11 @@ const commentSchema = new mongoose.Schema({
     trim:[true,'Please Provide a password without a space'],
   },
 });
-
+commentSchema.pre('find',function(next){
+  this.populate({
+      path:'Bike_id',
+  });
+  next();
+})
 const Comments = new mongoose.model("Comments", commentSchema);
 module.exports=Comments;

@@ -1,14 +1,17 @@
+const asyncHandler = require("express-async-handler");
+
 const Bike = require('../module/bike.model');
 const Comments = require('../module/comment.model');
 const AppError=require('./../arrorhandler/Apperror');
 
-
-const comment=async(req,res,next) => {
-    try{
+////////////////////////////////////////////////////
+//create comment
+const comment=asyncHandler(async(req,res,next) => {
+    
         
             const id = req.params.id;
             const bike = await Bike.findById(id);
-            console.log(bike);
+           
             if (!bike) {
               return next(new AppError("bike does not exists", 404));
             }
@@ -28,9 +31,7 @@ const comment=async(req,res,next) => {
               });
             } 
           
-    }catch(err){
-        next(new AppError(err, 500));
-    }
     
-}
+    
+})
 module.exports=comment
