@@ -6,23 +6,21 @@ const AppError = require('../arrorhandler/Apperror');
 const userschema=mongoose.Schema({
     name:{ 
         type:String,
-        required:[true,'please provide name'],
         trim:[true,'Please Provide a name without a space'],
     },
     email:{
         type:String,
-        required:[true,'please provide email'],
-        unique:true
+        unique:true,
+        validate:[validator.isEmail,'Please provide Email']
     },
     password:{
         type:String,
-        required:[true,'please provide password'],
         trim:[true,'Please Provide a password without a space'],
         validate:[validator.isStrongPassword,'Please provide strong password']
+        
     },
     confirmpassword:{
         type:String,
-        required:[true,'please provide confirmpassword'],
         validate:[{
             validator: function(el){
             return el===this.password;
@@ -30,21 +28,8 @@ const userschema=mongoose.Schema({
         }}]
     }
 
-});
+ });
 
-////email validation
-userschema.pre('save',async function(next){
-    
-    var emailRegex = /^[-!#$%&'*+\/0-9=?A-Z^_a-z{|}~](\.?[-!#$%&'*+\/0-9=?A-Z^_a-z`{|}~])*@[a-zA-Z0-9](-*\.?[a-zA-Z0-9])*\.[a-zA-Z](-?[a-zA-Z0-9])+$/;
-    if(this.email.match(emailRegex)){
-        next();
-        return this.email;
-        
-    }else{
-        return next(new AppError('email is not valid',400));
-    }
-  
-})
 //password validation
 userschema.pre('save',async function(next){
   

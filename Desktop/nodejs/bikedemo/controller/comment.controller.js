@@ -15,7 +15,7 @@ const comment=asyncHandler(async(req,res,next) => {
             if (!bike) {
               return next(new AppError("bike does not exists", 404));
             }
-          if(!req.body.comment){
+          if(!req.body.comment||typeof(req.body.comment)=='number'){
             return next(new AppError("please add a comment", 404));
           }
          

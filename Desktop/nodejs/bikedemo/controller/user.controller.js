@@ -16,8 +16,8 @@ const register=asyncHandler(async(req,res,next)=>{
 
         let missingValues = [];
       
-        if (!name) missingValues.push("Name ");
-        if (!email) missingValues.push("Email ");
+        if (!name || typeof(name)=='number') missingValues.push("Name ");
+        if (!email || typeof(email)=='number') missingValues.push("Email ");
         if (!password) missingValues.push("password ");
         if (!confirmpassword) missingValues.push("confirmpassword ");
       

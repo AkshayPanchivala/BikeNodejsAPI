@@ -5,6 +5,7 @@ const AppError = require("../arrorhandler/Apperror");
 
 
 const protect=async(req,res,next)=>{
+    console.log('akkk')
 try{
     let token;
     if(req.headers.authorization && req.headers.authorization.startsWith('Bearer'));

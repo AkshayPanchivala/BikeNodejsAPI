@@ -30,7 +30,7 @@ const like=asyncHandler(async(req,res,next)=>{
        if(existinglike){
         return next(new AppError("you are already like this product",400));
        }
-       await DisLike.findOneAndDelete({
+       const deletedislike=await DisLike.findOneAndDelete({
         user_id: req.user.id,
         Bike_id: id,
        })
@@ -67,7 +67,7 @@ const dislike=asyncHandler(async(req,res,next)=>{
        if(existingdislike){
         return next(new AppError("you Have already dislike this product",400));
        }
-       await Like.findOneAndDelete({
+       const deletelike=await Like.findOneAndDelete({
        
         user_id: req.user.id,
         Bike_id: id,
@@ -101,7 +101,9 @@ const MostLiked=asyncHandler(async(req,res,next)=>{
       },
       {
         $limit: 1,
-      },
+      },{
+        $skip:4
+      }
       
     ]).exec();
    

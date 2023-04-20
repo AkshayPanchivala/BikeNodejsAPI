@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const commentSchema = new mongoose.Schema({
   user_id: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Users",
+    ref: "Users", 
   },
   Bike_id: {
     type: mongoose.Schema.Types.ObjectId,
@@ -12,8 +12,7 @@ const commentSchema = new mongoose.Schema({
   },
   comment: {
     type: String,
-    required:[true,'please provide name'],
-    trim:[true,'Please Provide a password without a space'],
+    trim:[true,'Please Provide a comment without a space'],
   },
 });
 commentSchema.pre('find',function(next){

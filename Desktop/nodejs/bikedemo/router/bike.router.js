@@ -1,37 +1,37 @@
 const express=require('express');
 
 const { protect }=require('./../controller/auth.controller');
-const {createbike,gateallbike,deletebike,updatebike,getbikebytype,recentbike}=require('../controller/bike.controller')
+const {createbike,gateallbike,deletebike,updatebike,getbikebytype,recentbike,pagination}=require('../controller/bike.controller')
 const {like,dislike,MostLiked}=require('./../controller/likedislike.controller')
 const comment=require('./../controller/comment.controller');
 
 const router=express.Router();
 
 
+router.use(protect);
 //create bike routes
-router.route('/').post(  protect,createbike).get(protect,gateallbike);
-
+router.route('/').post(createbike).get(gateallbike);
+router.route("/getbike").get(pagination);
 //recent bike routes
-router.route('/recentbike').get(protect,recentbike);
-
+router.route('/recentbike').get(recentbike);
 // getMostLiked product route 
-router.route("/mostlikedproduct").get( protect,MostLiked);
+router.route("/mostlikedBike").get(MostLiked);
 
 // like routes
-router.route("/likeProduct/:id").post( protect,like);
+router.route("/likeBike/:id").post(like);
 
 // Dislike routes
-router.route("/dislikeProduct/:id").post( protect,dislike);
+router.route("/dislikeBike/:id").post(dislike);
 
 // comment route
-router.route("/comment/:id").post( protect,comment);
+router.route("/comment/:id").post(comment);
 
 //update bike
-router.route('/:id').patch(protect,updatebike).delete(protect,deletebike);
+router.route('/:id').put(updatebike).delete(deletebike);
+
 
 //get bike by biketype
-router.route('/:biketype').get(protect,getbikebytype);
-
+router.route('/:biketype').get(getbikebytype);
 
 
 module.exports=router;
