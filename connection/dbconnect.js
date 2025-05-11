@@ -7,6 +7,7 @@ const connection=async(req,res,next)=>{
         const connection=await mongoose.connect(`${process.env.database_url}`);
        console.log("Successfully connect your appplictaion with database!!")
     }catch(err){
+        console.log("Database connection are refused",err);
         return next(new AppError("Database connection are refused", 404));
     }
 }
