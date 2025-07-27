@@ -26,5 +26,9 @@ jobs:
 
     - name: Run tests
       run: npm test
+      env:
+        jwt_secretkey: ${{ secrets.JWT_SECRET_KEY }}
+        jwt_expirydate: ${{ secrets.JWT_EXPIRY_DATE }}
+        database_url: ${{ secrets.DATABASE_URL }}
 
     # Add more steps here for linting, building, etc., as needed for production readiness
