@@ -5,8 +5,42 @@ const DisLike = require('./../module/dislike.model');
 const Bike = require('./../module/bike.model');
 const Comments = require("../module/comment.model");
 
-///////////////////////////////////////////
-/////create like
+/**
+ * @swagger
+ * tags:
+ *   name: Likes and Dislikes
+ *   description: API for managing likes and dislikes on bikes
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Like:
+ *       type: object
+ *       properties:
+ *         user_id:
+ *           type: string
+ *           description: The ID of the user who liked the bike
+ *         Bike_id:
+ *           type: string
+ *           description: The ID of the bike that was liked
+ *       example:
+ *         user_id: "60d0fe4f5311236168a109cd"
+ *         Bike_id: "60d0fe4f5311236168a109cc"
+ *     Dislike:
+ *       type: object
+ *       properties:
+ *         user_id:
+ *           type: string
+ *           description: The ID of the user who disliked the bike
+ *         Bike_id:
+ *           type: string
+ *           description: The ID of the bike that was disliked
+ *       example:
+ *         user_id: "60d0fe4f5311236168a109cd"
+ *         Bike_id: "60d0fe4f5311236168a109cc"
+ */
 
 const like = asyncHandler(async (req, res, next) => {
   const id = req.params.id;
@@ -36,9 +70,6 @@ const like = asyncHandler(async (req, res, next) => {
   })
 });
 
-
-//////////////////////////////////////////////////////
-////create dislike
 const dislike = asyncHandler(async (req, res, next) => {
   const id = req.params.id;
   const bike = await Bike.findById(id);
@@ -68,9 +99,6 @@ const dislike = asyncHandler(async (req, res, next) => {
   })
 });
 
-
-//////////////////////////////////////////////////
-///get most liked product
 const MostLiked = asyncHandler(async (req, res, next) => {
 
   const likedbike = await Like.aggregate([

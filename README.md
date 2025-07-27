@@ -59,6 +59,14 @@ This project is a demonstration of a Bike API built using Node.js. It allows use
 
 5. The API will be running at `http://localhost:8000`.
 
+### API Documentation (Swagger UI)
+
+Once the server is running, you can access the interactive API documentation (Swagger UI) at:
+
+`http://localhost:8000/api-docs`
+
+This interface allows you to explore all available endpoints, their parameters, and expected responses.
+
 ## API Endpoints
 
 ### Auth Routes
@@ -88,18 +96,18 @@ This project is a demonstration of a Bike API built using Node.js. It allows use
 
 - **GET /user/bike**: Get all bikes (Without pagination).
    
-- **GET /user/bike/getbikewithpagination**: Get all bikes with pagination (support pagination).
+- **GET /user/bike/paginated**: Get all bikes with pagination (support pagination).
     - Query parameters: `?page=1&limit=10`
-- **GET /user/bike/recentbike**: Get all recent added bikes (support pagination).
+- **GET /user/bike/recent**: Get all recent added bikes (support pagination).
     - Query parameters: `?page=1&limit=10`
 
 ### Interaction Routes
 
-- **POST /user/bike/likebike/:id**: Like a bike.
+- **POST /user/bike/:id/like**: Like a bike.
   
-- **POST /user/bike/dislikebike/:id**: Dislike a bike.
+- **POST /user/bike/:id/dislike**: Dislike a bike.
   
-- **POST /user/bike/comment/:id**: Comment on a bike.
+- **POST /user/bike/:id/comment**: Comment on a bike.
     - Request body: `{ "comment": "Great bike!" }`
 
 

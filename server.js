@@ -8,6 +8,9 @@ const dbconnect=require('./connection/dbconnect');
 const globalErrorHandler=require('./arrorhandler/globalerrorhandler');
 const AppError=require('./arrorhandler/Apperror');
 
+const swaggerUi = require('swagger-ui-express');
+const specs = require('./swagger');
+
 const app=express();
 
 /*globally Middleware
@@ -27,6 +30,9 @@ app.use(cors())
 app.use('/user',require('./router/user.router'));
 app.use('/user/biketype',require('./router/biketypes.router'));
 app.use('/user/bike',require('./router/bike.router'));
+
+// Swagger UI
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 
 // error handling 

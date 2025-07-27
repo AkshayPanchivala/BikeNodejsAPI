@@ -4,9 +4,108 @@ const asyncHandler = require("express-async-handler");
 const User = require('./../module/user.model');
 const AppError = require('./../arrorhandler/Apperror')
 
-////////////////////////////////////////////////////////////
-//user register
+/**
+ * @swagger
+ * tags:
+ *   name: Users
+ *   description: User management and authentication
+ */
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       required:
+ *         - name
+ *         - email
+ *         - password
+ *       properties:
+ *         _id:
+ *           type: string
+ *           description: The auto-generated ID of the user
+ *         name:
+ *           type: string
+ *           description: The user's name
+ *         email:
+ *           type: string
+ *           format: email
+ *           description: The user's email address (unique)
+ *         password:
+ *           type: string
+ *           format: password
+ *           description: The user's password
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           description: The date and time the user was created
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ *           description: The date and time the user was last updated
+ *       example:
+ *         _id: "60d0fe4f5311236168a109cc"
+ *         name: "John Doe"
+ *         email: "john.doe@example.com"
+ *         password: "password123"
+ *         createdAt: "2023-01-01T12:00:00Z"
+ *         updatedAt: "2023-01-01T12:00:00Z"
+ */
+
+/**
+ * @swagger
+ * /user/register:
+ *   post:
+ *     summary: Register a new user
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - email
+ *               - password
+ *               - confirmPassword
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: The user's name
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: The user's email
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 description: The user's password
+ *               confirmPassword:
+ *                 type: string
+ *                 format: password
+ *                 description: Confirmation of the user's password
+ *     responses:
+ *       201:
+ *         description: User registered successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: success
+ *                 data:
+ *                   $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Bad request, missing required fields or invalid data
+ *       403:
+ *         description: Password and confirm password do not match
+ *       409:
+ *         description: User with this email already exists
+ */
 const register = asyncHandler(async (req, res, next) => {
   const { name, email, password, confirmPassword } = req.body;
   let missingValues = [];
@@ -44,9 +143,53 @@ const register = asyncHandler(async (req, res, next) => {
   })
 });
 
-//////////////////////////////////////////////////////////////
-//user login
-
+/**
+ * @swagger
+ * /user/login:
+ *   post:
+ *     summary: Log in a user
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: The user's email
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 description: The user's password
+ *     responses:
+ *       200:
+ *         description: User logged in successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: success
+ *                 data:
+ *                   $ref: '#/components/schemas/User'
+ *                 token:
+ *                   type: string
+ *                   description: JWT authentication token
+ *       400:
+ *         description: Bad request, missing required fields
+ *       403:
+ *         description: Incorrect username or password
+ *       404:
+ *         description: User not found
+ */
 const login = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
 
