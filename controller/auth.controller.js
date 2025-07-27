@@ -12,6 +12,7 @@ const protect = async (req, res, next) => {
       token = req.headers.authorization.split(" ")[1];
     const decoded = await jwt.verify(token, process.env.jwt_secretkey);
     const freshuser = await User.findById(decoded._id);
+   
     if (!freshuser) next(new AppError("you are not log in", 401));
     req.user = freshuser;
     next();

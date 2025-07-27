@@ -105,22 +105,19 @@ const MostLiked = asyncHandler(async (req, res, next) => {
     {
       $group: {
         _id: "$Bike_id",
-        count: { $sum: 1 }, // counting no. of documents pass
+        count: { $sum: 1 },
       },
     },
     {
       $sort: { count: -1 },
     },
     {
-      $limit: 1,
-    }, {
-      $skip: 4
+      $limit: 1 // get the most liked bike
     }
-
+    // Remove $skip: 4 unless you want the 5th most liked bike
   ]).exec();
-
   if (likedbike.length == 0) {
-    return next(new AppError("Not found any like on bike", 404));
+    return next(new AppError("No Likes Found any Of the Bikes", 404));
   }
 
   const bike = likedbike[0]
