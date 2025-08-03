@@ -1,13 +1,13 @@
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUrl=process.env.SWAGGER_URL || `http://localhost:8000`; // Adjust this to your server URL
-const swaggerDescription = process.env.SWAGGER_DESCRIPTION || 'API documentation for the BikeNodejsAPI project';
+const swaggerDescription = process.env.SWAGGER_DESCRIPTION || 'API documentation for the bike-hub-api project';
 const options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'BikeNodejsAPI',
+      title: 'Bike Hub API',
       version: '1.0.0',
-      description: 'API documentation for the BikeNodejsAPI project',
+      description: 'API documentation for the bike-hub-api project',
     },
     tags: [
       {
