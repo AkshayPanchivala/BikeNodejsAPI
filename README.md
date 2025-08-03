@@ -1,4 +1,4 @@
-# Bike Demo API
+# Bike Hub API
 
 This project is a demonstration of a Bike API built using Node.js. It allows users to register and login using JWT authentication. Once logged in, users can perform various operations related to bikes, such as adding different types of bikes, updating, deleting, liking, disliking, and commenting on bikes. The API also supports pagination when retrieving the list of all bikes.
 
